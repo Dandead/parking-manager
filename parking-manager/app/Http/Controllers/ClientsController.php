@@ -63,7 +63,8 @@ class ClientsController extends Controller
 
     public function delete($id){
         DB::table('clients')
-            ->delete("$id");
+            ->where('client_id', '=', $id)
+            ->delete();
         return redirect('/');
     }
 }

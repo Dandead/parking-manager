@@ -13,8 +13,18 @@ class MainController extends Controller
      * @return \Illuminate\View\View
      */
     public function index(){
+//        $clients = DB::select(
+//            "SELECT clients.client_id, clients.full_name, vehicles.vehicle_id , vehicles.licence_plate
+//            FROM clients JOIN vehicles ON clients.client_id = vehicles.client_id ORDER BY clients.client_id ASC"
+//        )->paginate(7);
         $clients = DB::table('clients')
-                ->leftJoin('vehicles', 'clients.client_id', '=', 'vehicles.vehicle_id')
+                ->select([
+                    'clients.client_id as client_id',
+                    'clients.full_name as full_name',
+                    'vehicles.vehicle_id as vehicle_id',
+                    'vehicles.licence_plate as licence_plate',
+                ])
+                ->Join('vehicles', 'clients.client_id', '=', 'vehicles.client_id')
                 ->paginate(7);
             return view('index', ['clients' => $clients]);
     }
@@ -28,7 +38,8 @@ class MainController extends Controller
                 'phone_num',
                 'address',
             ])
-            ->where('client_id','=', $id);
+            ->where('client_id','=', $id)
+            ->get();
 
         $vehicles = DB::table('vehicles')
             ->select([
@@ -39,7 +50,8 @@ class MainController extends Controller
                 'licence_plate',
                 'is_active',
             ])
-            ->where('client_id', '=', $id);
+            ->where('client_id', '=', $id)
+            ->get();
         return view('client_page', ['client' => $client, 'vehicles' => $vehicles]);
     }
 
@@ -48,10 +60,10 @@ class MainController extends Controller
     }
 
     public function EditClientPage(){
-        return view();
+        return view('edit_client_page');
     }
 
     public function EditVehiclesPage(){
-        return view();
+        return view('edit_vehicle_page');
     }
 }

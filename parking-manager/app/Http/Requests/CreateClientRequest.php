@@ -38,15 +38,30 @@ class CreateClientRequest extends FormRequest
             ],
             'address' => 'max:255',
         ];
-        foreach ($this->request->get('vehicles') as $key => $value){
-            $rules['brand'] = 'required';
-            $rules['model'] = 'required';
-            $rules['color'] = 'required';
-            $rules['licence_plate'] = [
+//        foreach ($this->request->get('vehicles') as $key => $value){
+        $rules['brand'] = 'required';
+        $rules['model'] = 'required';
+        $rules['color'] = 'required';
+        $rules['licence_plate'] = [
+                'required',
                 'unique:App\Models\VehicleModel,licence_plate',
                 'regex:/^[а-я]{2}\d{3}[а-я]{1}\d{2,3}$/',
             ];
-        }
+//        }
         return $rules;
+
+
+    }
+    public function messages(){
+        $messages = [
+            'full_name.required' => 'Required field!',
+            'phone_num.required' => 'Required field!',
+            'phone_num.unique' => 'Unique value!',
+            'brand.required' => 'Required field!',
+            'model.required' => 'Required field!',
+            'gender.required' => 'Required field!',
+            'licence_plate.required' => 'Required field!',
+            'licence_plate.unique' => 'Unique value!',
+        ];
     }
 }
