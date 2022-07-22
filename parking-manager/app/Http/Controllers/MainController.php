@@ -13,10 +13,6 @@ class MainController extends Controller
      * @return \Illuminate\View\View
      */
     public function index(){
-//        $clients = DB::select(
-//            "SELECT clients.client_id, clients.full_name, vehicles.vehicle_id , vehicles.licence_plate
-//            FROM clients JOIN vehicles ON clients.client_id = vehicles.client_id ORDER BY clients.client_id ASC"
-//        )->paginate(7);
         $clients = DB::table('clients')
                 ->select([
                     'clients.client_id as client_id',
@@ -59,11 +55,36 @@ class MainController extends Controller
         return view('add_client_page');
     }
 
-    public function EditClientPage(){
-        return view('edit_client_page');
+    public function DisplayParking(){
+        $clients = DB::table('clients')
+            ->select(['client_id', 'full_name'])
+            ->get();
+        $vehicles = DB::table('clients')
+            ->select([
+                'clients.client_id as client_id',
+                'clients.full_name as full_name',
+                'vehicles.vehicle_id as vehicle_id',
+                'vehicles.licence_plate as licence_plate',
+                'vehicles.is_active as is_active',
+            ])
+            ->join('vehicles', 'clients.client_id', '=', 'vehicles.client_id')
+            ->where('is_active', '=', '1')
+            ->paginate(7);
+        return view('parking', ['clients' => $clients, 'vehicles' => $vehicles]);
     }
 
-    public function EditVehiclesPage(){
-        return view('edit_vehicle_page');
+    public function GetClientCars(Request $request){
+            $html = '';
+            $client_id = $request->input('value');
+            $vehicles = DB::table('vehicles')
+                ->where('client_id', '=', $client_id)
+                ->where('is_active','=','0')
+                ->select()
+                ->get();
+            foreach ($vehicles as $veh) {
+                $html .= '<option value="'.$veh->vehicle_id.'">id: '.$veh->vehicle_id.' Licence plate: '.$veh->licence_plate.'</option>';
+            }
+
+        return response()->json(['html' => $html]);
     }
 }

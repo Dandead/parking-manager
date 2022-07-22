@@ -13,17 +13,14 @@ use App\Http\Controllers\{MainController, ClientsController, VehiclesController}
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/client/{id}/edit', [MainController::class, 'EditClientPage']);
+Route::post('/delete/client/{id}', [ClientsController::class, 'delete']);
+Route::post('/delete/vehicle/{id}', [VehiclesController::class, 'delete']);
 Route::get('/client/{id}', [MainController::class, 'ClientPage']);
-Route::post('/client{id}', [ClientsController::class, 'update']);
-Route::delete('client/{id}', [ClientsController::class, 'delete']);
-Route::get('/create', [MainController::class, 'AddClientPage']);
-Route::post('/create', [ClientsController::class, 'create']);
-Route::post('/vehicle/{id}/change_status', [VehiclesController::class, 'switch_status']);
-Route::get('/vehicle/{id}/edit', [MainController::class, 'EditVehiclesPage']);
-Route::get('/vehicle/{id}', [MainController::class]);
-Route::post('/vehicle/{id}', [VehiclesController::class, 'update']);
-Route::delete('/vehicle/{id}', [VehiclesController::class, 'delete']);
-
+Route::post('/client/{id}', [ClientsController::class, 'update']);
+Route::get('/create/client', [MainController::class, 'AddClientPage']);
+Route::post('/create/client', [ClientsController::class, 'create']);
+Route::post('/get_vehicles', [MainController::class, 'GetClientCars'])->name('MainController.GetClientCars');
+Route::post('/parking', [VehiclesController::class, 'switch_status']);
+Route::get('/parking', [MainController::class, 'DisplayParking']);
 Route::get('/', [MainController::class, 'index']);
 

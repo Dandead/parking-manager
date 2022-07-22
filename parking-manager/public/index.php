@@ -53,5 +53,3 @@ $response = $kernel->handle(
 )->send();
 
 $kernel->terminate($request, $response);
-
-echo $_SERVER['HTTP_USER_AGENT'];
